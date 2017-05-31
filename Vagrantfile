@@ -24,7 +24,7 @@ EOF
   tee -a $MONGOD_CONF_FILE <<-"EOF"
 replication:
   oplogSizeMB: 64
-  replSetName: bogus-replica-set
+  replSetName: mongo-replica-set
 EOF
 
   iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 27017 -j ACCEPT
