@@ -1,10 +1,10 @@
 # bt-mongodb-cluster
 Vagrant Box (CentOS/7) with MongoDB(v3.4) 3-nodes cluster for BikeTracking Server Project .
 
-For additional details about the project check: danlucian.github.io
+For additional details about the project check: [danlucian.github.io/biketracker/](http://danlucian.github.io/biketracker/)
 
 
-![mongodb cluster replica set][documentation/replica_set_view.png]
+![mongodb cluster][/documentation/replica_set_view.png]
 ## Start vagrant and setup replica set
 Run in terminal: `vagrant up`
 
