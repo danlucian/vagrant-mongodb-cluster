@@ -18,6 +18,7 @@ EOF
 
   yum -y install openssl openssl-devel
   yum -y install nano mongodb-org --nogpgcheck
+  yum -y install perl	
 
   MONGOD_CONF_FILE="/etc/mongod.conf"
 
@@ -27,9 +28,10 @@ replication:
   replSetName: mongo-replica-set
 EOF
 
-  iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 27017 -j ACCEPT
-  iptables-save > /etc/sysconfig/iptables
-  service iptables restart 
+  systemctl enable firewalld
+  systemctl start firewalld
+  firewall-cmd --zone=public --add-port=27017/tcp --permanent
+  firewall-cmd --reload
   perl -pi -e 's/bindIp: 127.0.0.1/#bind_ip=127.0.0.1/g' /etc/mongod.conf
   service mongod restart
 SCRIPT
@@ -48,16 +50,19 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define :mongo1 do |mongo1|
     mongo1.vm.network :private_network, ip: "192.168.22.10"
+    mongo1.vm.network "forwarded_port", guest: 27017, host: 27017
     mongo1.vm.provision "shell", inline: $mongoInitScript
   end
 
   config.vm.define :mongo2 do |mongo2|
     mongo2.vm.network :private_network, ip: "192.168.22.20"
+    mongo2.vm.network "forwarded_port", guest: 27017, host: 27018
     mongo2.vm.provision "shell", inline: $mongoInitScript
   end
 
   config.vm.define :mongo3 do |mongo3|
     mongo3.vm.network :private_network, ip: "192.168.22.30"
+    mongo3.vm.network "forwarded_port", guest: 27017, host: 27019
     mongo3.vm.provision "shell", inline: $mongoInitScript
   end
 
